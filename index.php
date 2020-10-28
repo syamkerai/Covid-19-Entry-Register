@@ -89,7 +89,7 @@ phpinfo();
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				<form action="includes/update.php" method="POST">
+				<form action="includes/insert.php" method="POST">
 					<div class="modal-body">
 						<div class="alert alert-warning" role="alert">
 							<strong>IMPORTANT!</strong>
