@@ -1,6 +1,7 @@
-<?php include("includes/config.php");?>
+<?php include("includes/config.php"); ?>
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -38,9 +39,9 @@
 </head>
 
 <body>
-<!-- <?php
-phpinfo();
-?> -->
+	<!-- <?php
+			phpinfo();
+			?> -->
 	<div class="container-fluid">
 		<div class="left-panel">
 			<div class="container">
@@ -147,7 +148,7 @@ phpinfo();
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				<form method="POST" id="updata">
+				<form method="POST" action="includes/insert.php">
 					<div class="modal-body">
 						<div class="form-group">
 							<label><b>Sign Out Time</b></label>
@@ -167,36 +168,104 @@ phpinfo();
 			</div>
 		</div>
 	</div>
-	<table class="table" style="vertical-align: middle; text-align: center;">
-				  <thead class="thead-dark">
-					<tr>
-					  	<th scope="col">#</th>
-					  	<th scope="col">First Name</th>
-					  	<th scope="col">Last Name</th>
-						<th scope="col">Sign In Date</th>
-					  	<th scope="col">Sign In Time</th>
-						<th scope="col">Action</th>
-					</tr>
-				  </thead>
-				  <tbody>
-				  	<?php if($select){ foreach($select as $se_data){ ?>
-					<tr>
-					  <th scope="row"><?php echo $counter; $counter++; ?></th>
-					  	<td><?php echo $se_data['u_fname']; ?></td>
-					  	<td><?php echo $se_data['u_lname']; ?></td>
-					  	<td><?php echo $se_data['u_tdate']; ?></td>
-						<td><?php echo $se_data['u_intime']; ?></td>
-						<td>
-							<button type="button" class="btn btn-primary editdata" data-dataid="<?php echo $se_data['u_id']; ?>" data-toggle="modal" data-target="#updateModalCenter">Sign Out</button>
-							<!--<button type="button" class="btn btn-danger deletedata" data-dataid="<?php echo $se_data['u_id']; ?>" data-toggle="modal" data-target="#deleteModalCenter">Delete</button>-->
-						</td>
-					</tr>
-					<?php }}else{ echo "<tr><td colspan='7'><h2>No Results Found</h2></td></tr>"; } ?>
-				  </tbody>
-				</table>	
+	<script type="text/javascript">
+		setInterval(() => {
+			const time = new Date().toLocaleTimeString();
+			$('input[name="intime"]').val(time);
+			$('input[name="outtime"]').val(time);
+		}, 1000);
+		//set date
+		setInterval(() => {
+			getField("Today").value = util.printd("YYYY/MM/DD", new Date());
+		}, 5000);
+
+		//count refresh
+		setInterval(() => {
+			$('#tbl_count').load('count.php');
+		}, 3000);
+	</script>
+
+	<?php
+
+	$counter = 1;
+	$sql = "SELECT * FROM entries";
+	$result = mysqli_query($con, $sql);
+
+	if (mysqli_num_rows($result) > 0) {
+		// output data of each row
+		echo '<table class="table" style="vertical-align: middle; text-align: center;">';
+		echo '<thead class="thead-dark">';
+		echo '<tr>';
+		echo '<th scope="col">#</th>';
+		echo '<th scope="col">First Name</th>';
+		echo '<th scope="col">Last Name</th>';
+		echo '<th scope="col">Sign In Date</th>';
+		echo '<th scope="col">Sign In Time</th>';
+		echo '<th scope="col">Action</th>';
+		echo '</tr>';
+		echo '</thead>';
+		while ($row = mysqli_fetch_assoc($result)) {
+			echo '<tbody>';
+			echo '<tr>';
+			echo '<th scope="row">' . $counter . '</th>';
+			echo '<td>' . $row['u_fname'] . '</td>';
+			echo '<td>' . $row['u_lname'] . '</td>';
+			echo '<td>' . $row['u_tdate'] . '</td>';
+			echo '<td>' . $row['u_intime'] . '</td>';
+			echo '<td>';
+			echo '<button type="button" class="btn btn-primary editdata" data-dataid="' . $row['u_id'] . ' " data-toggle="modal" data-target="#updateModalCenter">Sign Out</button>';
+			echo '</td>';
+			echo '</tr>';
+			echo '</tbody>';
+
+
+
+
+echo '<div class="modal fade" id="updateModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">';
+echo '<div class="modal-dialog modal-dialog-centered" role="document">';
+echo '<div class="modal-content">';
+echo '<div class="modal-header">';
+echo '<h5 class="modal-title" id="updateModalCenterTitle">SSTM | COVID-19 Visitor Sign Out</h5>';
+echo '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+echo '<span aria-hidden="true">&times;</span>';
+echo '</button>';
+echo '</div>';
+echo '<form method="POST" action="includes/update.php">';
+echo '<div class="modal-body">';
+echo '<div class="form-group">';
+echo '<label><b>Sign Out Time</b></label>';
+echo '<input type="text" class="form-control" name="outtime" readonly>';
+echo '<span class="error-msg" id="umsg_5"></span>';
+echo '</div>';
+echo '<div class="form-group">';
+echo '<input type="hidden" name="dataval" value="' . $row['u_id'] . '">';
+echo '<span class="success-msg" id="umsg_6"></span>';
+echo '</div>';
+echo '</div>';
+echo '<div class="modal-footer">';
+echo '<button type="button" class="btn btn-secondary" data-dismiss="modal" id="up_cancel">Cancel</button>';
+echo '<button type="submit" class="btn btn-primary">Sign Out</button>';
+echo '</div>';
+echo '</form>';
+echo '</div>';
+echo '</div>';
+echo '</div>';
+
+
+
+			$counter = $counter + 1;
+		}
+		echo '</table>';
+	} else {
+		echo "0 results";
+	}
+	?>
+
+
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" type="text/javascript"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
 </body>
+
 </html>
