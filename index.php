@@ -1,34 +1,29 @@
-<?php include("includes/config.php"); ?>
+<?php
+include 'backend/database.php';
+?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
-<head>
+<head> 	
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>SSTM | COVID-19 DARSHAN REGISTER</title>
-	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-	<style type="text/css">
-		.box-title {
-			border-radius: 5px;
-			box-shadow: 0px 0px 3px 1px gray;
-			padding: 10px 0px;
-		}
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>User Data</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+	<script src="ajax/ajax.js"></script>
+</head>
 
-		.error-msg {
-			color: #dc3545;
-			font-weight: 600;
-		}
-
-		.success-msg {
-			color: green;
-			font-weight: 600;
-		}
-
-		.left-panel {
-			width: 75%;
-		}
-
-		.right-panel {
+<body>
+	<style>
+				.right-panel {
 			position: absolute;
 			width: 25%;
 			right: 10px;
@@ -36,236 +31,270 @@
 			padding-left: 12px;
 		}
 	</style>
-</head>
+	<div class="container">
+		<p id="success"></p>
+		<div class="row" style="margin-bottom: 100px;">
+			<?php
 
-<body>
-	<!-- <?php
-			phpinfo();
-			?> -->
-	<div class="container-fluid">
-		<div class="left-panel">
-			<div class="container">
-				<div class="row m-2 text-center">
-					<div class="col-3">
-						<button type="button" class="btn btn-lg btn-success btn-block" data-toggle="modal" data-target="#exampleModalCenter">Sign In</button>
+				$sql = "SELECT COUNT(`u_id`)FROM entries WHERE `u_outtime` = '00:00:00'";
+				if ($result = mysqli_query($conn, $sql));
+					if (mysqli_num_rows($result) > 0) {
+						// output data of each row
+						while($row = mysqli_fetch_assoc($result)) {
+						  $no_people = $row["COUNT(`u_id`)"];
+						}
+					  } else {
+						$no_people = '0';
+					  }
+					  function function_alert() { 
+              
+						// Display the alert box; note the Js tags within echo, it performs the magic
+						echo "<script>alert('There are more than 10 people inside please Wait for them to exit');</script>"; 
+					} 
+			?>
+			<div class="right-panel" >
+				<div class="card border-info mb-3" style="max-width: 25rem;">
+					<div class="card-header">
+						<b>
+							<center>No. Of People In The Prayer Hall</center>
+						</b>
+						<b>
+							<center><?php echo $no_people;?></center>
+						</b>
+						<b style="color:#FF0000" ;>
+							<center>A maximum of 10 people allowed only.</center>
+						</b>
+
 					</div>
-					<div class="col-9">
-						<div class="alert alert-primary" role="alert">
-							<h4 class="alert-heading">SSTM | COVID-19 DARSHAN REGISTER</h4>
-						</div>
-					</div>
-				</div>
-				<div class="row mt-5" id="tbl_rec">
+					<h1 class="display-3">
+						<div class="text-info" id="tbl_count">
+							<div>
+					</h1>
 				</div>
 			</div>
 		</div>
+		<div class="table-wrapper">
+			<div class="table-title">
 
-		<div class="right-panel">
-			<div class="card border-info mb-3" style="max-width: 25rem;">
-				<div class="card-header">
-					<b>
-						<center>No. Of People In The Prayer Hall</center>
-					</b>
-					<b style="color:#FF0000" ;>
-						<center>A maximum of 10 people allowed only.</center>
-					</b>
-
+				<div class="row">
+					<div class="col-sm-6">
+						<h2>SSTM <b>COVID 19 VISITOR REGISTER</b></h2>
+					</div>
+					<div class="col-sm-6">
+					<?php if($no_people >= 10){echo '<a onclick="myFunction()" class="btn btn-success"" ><i class="material-icons"></i> <span>Sign In</span></a>';}else{echo '<a href="#addVisitorModal" class="btn btn-success" data-toggle="modal" ><i class="material-icons"></i> <span>Sign In</span></a>';} ?>
+						<!--a href="JavaScript:void(0);" class="btn btn-danger" id="delete_multiple"><i class="material-icons"></i> <span>Delete</span></a>-->
+					</div>
 				</div>
-				<h1 class="display-3">
-					<div class="text-info" id="tbl_count">
-						<div>
-				</h1>
 			</div>
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>FIRSTNAME</th>
+						<th>SURNAME</th>
+						<th>NO. OF FAMILY MEMBERS</th>
+						<th>SIGN IN DATE</th>
+						<th>SIGN IN TIME</th>
+						<th>EXIT</th>
+					</tr>
+				</thead>
+				<tbody>
+
+					<?php
+					$result = mysqli_query($conn, "SELECT * FROM entries WHERE u_outtime = '00:00:00'");
+					$i = 1;
+					while ($row = mysqli_fetch_array($result)) {
+					?>
+						<tr id="<?php echo $row["id"]; ?>">
+
+							<td><?php echo $i; ?></td>
+							<td><?php echo $row["u_fname"]; ?></td>
+							<td><?php echo $row["u_lname"]; ?></td>
+							<td><?php echo $row["u_noofmembers"]; ?></td>
+							<td><?php echo $row["u_tdate"]; ?></td>
+							<td><?php echo $row["u_intime"]; ?></td>
+							<td>
+								<a href="#editVisitorModal" class="edit" data-toggle="modal">
+									<button class="btn btn-info" data-toggle="tooltip" data-id="<?php echo $row["u_id"]; ?>" data-outtime="<?php echo $row["u_outtime"]; ?>" title="Sign Out">Sign Out</button>
+								</a>
+								<!--<a href="#deleteEmployeeModal" class="delete" data-id="<?php echo $row["id"]; ?>" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" 
+						 title="Delete"></i></a>-->
+							</td>
+						</tr>
+						<div id="editVisitorModal" class="modal fade">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<form method="POST" action="backend/signout.php">
+										<div class="modal-header">
+											<h4 class="modal-title">Visitor Sign Out</h4>
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+										</div>
+										<div class="modal-body">
+
+											<input type="hidden" id="id_u" name="id" class="form-control" value="<?php echo $row["u_id"]; ?>" requir	ed>
+
+											<div class="form-group">
+												<label>Sign Out Time</label>
+												<input type="text" id="outtime" name="outtime" class="form-control" required/>
+											</div>
+
+										</div>
+										<div class="modal-footer">
+											<input type="hidden" value="2" name="type">
+											<button type='submit' name="Submit" value="Submit" class="btn btn-primary">Sign Out</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					<?php
+						$i++;
+					}
+					?>
+				</tbody>
+			</table>
+
 		</div>
 	</div>
-
-	<!-- Insert Design Modal -->
-
-	<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
+	<!-- Add Modal HTML -->
+	<div id="addVisitorModal" class="modal fade">
+		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalCenterTitle">SSTM | COVID-19 Visitor Sign In</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<form action="includes/insert.php" method="POST">
+				<form id="user_form">
+					<div class="modal-header">
+						<h4 class="modal-title">Visitor Sign In</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					</div>
 					<div class="modal-body">
-						<div class="alert alert-warning" role="alert">
-							<strong>IMPORTANT!</strong>
-							<br> Please register for each individual person.
-						</div>
+
 						<div class="form-group">
-							<label><b>First Name</b></label>
-							<input type="text" name="fname" id="fname" class="form-control" placeholder="Firstname" autocomplete="on" pattern="[A-Z]{3,15}" title="No numeric, spaces or special characters allowed. A minimum of 3 and a maximum of 15 characters allowed." required>
-							<span class="error-msg" id="msg_1"></span>
-						</div>
-						<div class="form-group">
-							<label><b>Surname</b></label>
-							<input type="text" name="lname" id="lname" class="form-control" placeholder="Surname" autocomplete="on" pattern="[A-Z]{3,15}" title="No numeric, spaces or special characters allowed. A minimum of 3 and a maximum of 15 characters allowed." required>
-							<span class="error-msg" id="msg_2"></span>
-						</div>
-						<div class="form-group">
-							<label><b>Mobile Number</b></label>
-							<input type="text" name="mnumber" class="form-control" placeholder="0410333555" pattern="^\d{10}$" title="Please input a valid mobile number" autocomplete="off" minlength="10" maxlength="10" required>
-							<span class="error-msg" id="msg_3"></span>
-						</div>
-						<div class="form-group">
-							<label><b>Sign In Date</b></label>
-							<input type="date" name="tdate" id="today" class="form-control" readonly>
-							<span class="error-msg" id="msg_4"></span>
-						</div>
-						<div class="form-group">
-							<label><b>Sign In Time</b></label>
-							<input type="text" name="intime" class="form-control" readonly>
-							<span class="error-msg" id="msg_5"></span>
+							<label>FIRSTNAME</label>
+							<input type="text" id="fname" name="fname" class="form-control" required/>
 						</div>
 
 						<div class="form-group">
-							<span class="success-msg" id="sc_msg"></span>
+							<label>SURNAME</label>
+							<input type="text" id="lname" name="lname" class="form-control" required/>
 						</div>
+
+						<div class="form-group">
+							<label>MOBILE NUMBER</label>
+							<input type="phone" id="mnumber" name="mnumber" class="form-control" required/>
+						</div>
+
+						<div class="form-group">
+							<label>NUMBER OF FAMILY MEMBERS SIGNING IN</label>
+							<input type="number" id="noofmembers" name="noofmembers" max="10" class="form-control" required/>
+						</div>
+
+						<div class="form-group">
+							<label>SIGN IN DATE</label>
+							<input type="date" id="today" name="tdate" class="form-control" required/>
+						</div>
+
+						<div class="form-group">
+							<label>SIGN IN TIME</label>
+							<input type="text" id="intime" name="intime" class="form-control" required/>
+						</div>
+
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" id="close_click" data-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-success">Sign In</button>
+						<input type="hidden" value="1" name="type">
+						<button type="submit" class="btn btn-success" data-dismiss="modal" id="btn-add">Sign In</button>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
 
-	<!-- End Insert Modal -->
-
-	<!-- Update Design Modal -->
-
-	<div class="modal fade" id="updateModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
+	<div id="editVisitorModal" class="modal fade">
+		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="updateModalCenterTitle">SSTM | COVID-19 Visitor Sign Out</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<form method="POST" action="includes/insert.php">
+				<form method="POST" action="backend/signout.php">
+					<div class="modal-header">
+						<h4 class="modal-title">Visitor Sign Out</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					</div>
 					<div class="modal-body">
+
+						<input type="hidden" id="id_u" name="id" class="form-control" value="<?php $row["id"]; ?>" required/>
+
 						<div class="form-group">
-							<label><b>Sign Out Time</b></label>
-							<input type="text" class="form-control" name="outtime" readonly>
-							<span class="error-msg" id="umsg_5"></span>
+							<label>Sign Out Time</label>
+							<input type="text" id="outtime" name="outtime" class="form-control" required/>
 						</div>
-						<div class="form-group">
-							<input type="hidden" name="dataval" id="upd_7">
-							<span class="success-msg" id="umsg_6"></span>
-						</div>
+
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal" id="up_cancel">Cancel</button>
-						<button type="submit" class="btn btn-primary">Sign Out</button>
+						<input type="hidden" value="2" name="type">
+						<button type='submit' name="Submit" value="Submit" class="btn btn-primary">Sign Out</button>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript">
+	<!-- Delete Modal HTML -->
+	<div id="deleteVisitorModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form>
+
+					<div class="modal-header">
+						<h4 class="modal-title">Delete Record</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" id="id_d" name="id" class="form-control">
+						<p>Are you sure you want to delete these Records?</p>
+						<p class="text-warning"><small>This action cannot be undone.</small></p>
+					</div>
+					<div class="modal-footer">
+						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+						<button type="button" class="btn btn-danger" id="delete">Delete</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script>
+function myFunction() {
+  alert("There are more than 10 people inside please Wait for them to exit");
+}
+		//set Sign In time
 		setInterval(() => {
 			const time = new Date().toLocaleTimeString();
 			$('input[name="intime"]').val(time);
+		}, 1000);
+
+		//set Sign Out time
+		setInterval(() => {
+			const time = new Date().toLocaleTimeString();
 			$('input[name="outtime"]').val(time);
 		}, 1000);
+
 		//set date
 		setInterval(() => {
-			getField("Today").value = util.printd("YYYY/MM/DD", new Date());
+			document.getElementById('today').value = moment().format('YYYY-MM-DD');
 		}, 5000);
 
-		//count refresh
-		setInterval(() => {
-			$('#tbl_count').load('count.php');
-		}, 3000);
+		// Capitalize Fields
+		function forceKeyPressUppercase(e) {
+			var charInput = e.keyCode;
+			if ((charInput >= 97) && (charInput <= 122)) { // lowercase
+				if (!e.ctrlKey && !e.metaKey && !e.altKey) { // no modifier key
+					var newChar = charInput - 32;
+					var start = e.target.selectionStart;
+					var end = e.target.selectionEnd;
+					e.target.value = e.target.value.substring(0, start) + String.fromCharCode(newChar) + e.target.value.substring(end);
+					e.target.setSelectionRange(start + 1, start + 1);
+					e.preventDefault();
+				}
+			}
+		}
 	</script>
 
-	<?php
 
-	$counter = 1;
-	$sql = "SELECT * FROM entries";
-	$result = mysqli_query($con, $sql);
-
-	if (mysqli_num_rows($result) > 0) {
-		// output data of each row
-		echo '<table class="table" style="vertical-align: middle; text-align: center;">';
-		echo '<thead class="thead-dark">';
-		echo '<tr>';
-		echo '<th scope="col">#</th>';
-		echo '<th scope="col">First Name</th>';
-		echo '<th scope="col">Last Name</th>';
-		echo '<th scope="col">Sign In Date</th>';
-		echo '<th scope="col">Sign In Time</th>';
-		echo '<th scope="col">Action</th>';
-		echo '</tr>';
-		echo '</thead>';
-		while ($row = mysqli_fetch_assoc($result)) {
-			echo '<tbody>';
-			echo '<tr>';
-			echo '<th scope="row">' . $counter . '</th>';
-			echo '<td>' . $row['u_fname'] . '</td>';
-			echo '<td>' . $row['u_lname'] . '</td>';
-			echo '<td>' . $row['u_tdate'] . '</td>';
-			echo '<td>' . $row['u_intime'] . '</td>';
-			echo '<td>';
-			echo '<button type="button" class="btn btn-primary editdata" data-dataid="' . $row['u_id'] . ' " data-toggle="modal" data-target="#updateModalCenter">Sign Out</button>';
-			echo '</td>';
-			echo '</tr>';
-			echo '</tbody>';
-
-
-
-
-echo '<div class="modal fade" id="updateModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">';
-echo '<div class="modal-dialog modal-dialog-centered" role="document">';
-echo '<div class="modal-content">';
-echo '<div class="modal-header">';
-echo '<h5 class="modal-title" id="updateModalCenterTitle">SSTM | COVID-19 Visitor Sign Out</h5>';
-echo '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
-echo '<span aria-hidden="true">&times;</span>';
-echo '</button>';
-echo '</div>';
-echo '<form method="POST" action="includes/update.php">';
-echo '<div class="modal-body">';
-echo '<div class="form-group">';
-echo '<label><b>Sign Out Time</b></label>';
-echo '<input type="text" class="form-control" name="outtime" readonly>';
-echo '<span class="error-msg" id="umsg_5"></span>';
-echo '</div>';
-echo '<div class="form-group">';
-echo '<input type="hidden" name="dataval" value="' . $row['u_id'] . '">';
-echo '<span class="success-msg" id="umsg_6"></span>';
-echo '</div>';
-echo '</div>';
-echo '<div class="modal-footer">';
-echo '<button type="button" class="btn btn-secondary" data-dismiss="modal" id="up_cancel">Cancel</button>';
-echo '<button type="submit" class="btn btn-primary">Sign Out</button>';
-echo '</div>';
-echo '</form>';
-echo '</div>';
-echo '</div>';
-echo '</div>';
-
-
-
-			$counter = $counter + 1;
-		}
-		echo '</table>';
-	} else {
-		echo "0 results";
-	}
-	?>
-
-
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" type="text/javascript"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
 </body>
 
 </html>
